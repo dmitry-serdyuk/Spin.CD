@@ -16,8 +16,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Hud {
     public Stage stage;
 
-    private int score = 0;
-    Label scoreLabel;
+    private int speed = 0;
+    private float animatedSpeed = 1;
+    private final int SCORE_PER_SEC = 200;
+    private final float SPEED_MULTIPLIER = 30f;
+    private Label scoreLabel;
 
     public static final int SCORE_OFFSET = 40;
 
@@ -25,10 +28,23 @@ public class Hud {
         stage = new Stage(viewport, batch);
 
         FileHandle handle = Gdx.files.internal("fonts/zig.fnt");
-        scoreLabel = new Label("djnjsanadnasdkjadsa", new Label.LabelStyle(new BitmapFont(handle), Color.WHITE));
+        scoreLabel = new Label(String.format("%05d", speed), new Label.LabelStyle(new BitmapFont(handle), Color.WHITE));
         Container labelContainer = new Container(scoreLabel);
         labelContainer.setFillParent(true);
         labelContainer.top();
         stage.addActor(labelContainer);
+    }
+
+    public void animateSpeed(float dt) {
+        if (speed > animatedSpeed) {
+            animatedSpeed = animatedSpeed + (SCORE_PER_SEC * dt);
+            scoreLabel.setText(String.format("%05d", (int) animatedSpeed));
+        } else {
+            scoreLabel.setText(String.format("%05d", speed));
+        }
+    }
+
+    public void setSpeed(int amount) {
+        speed = (int)(amount * SPEED_MULTIPLIER);
     }
 }

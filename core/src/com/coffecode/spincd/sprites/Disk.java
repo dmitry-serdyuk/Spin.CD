@@ -1,5 +1,6 @@
 package com.coffecode.spincd.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -10,10 +11,11 @@ import com.coffecode.spincd.scenes.Hud;
  * Created by Laptop on 3/10/2016.
  */
 public class Disk {
-    Texture texture;
-    Sprite sprite;
-    Vector2 position;
-    float angularVelocity;
+    private Texture texture;
+    private Sprite sprite;
+    private Vector2 position;
+    private float angularVelocity;
+    private final float FRICTION = 1.5f;
 
     public Disk(Vector2 position) {
         this.position = position;
@@ -61,11 +63,20 @@ public class Disk {
     }
 
     public void addAngularVelocity(float amount) {
-        angularVelocity += amount;
+        angularVelocity -= amount;
     }
 
-    public void slow() {
+    public void slow(float delta) {
+        if (angularVelocity < 0)
+            angularVelocity += (FRICTION * delta);
+
         if (angularVelocity > 0)
-            angularVelocity -= 0.02;
+            angularVelocity = 0;
+    }
+
+    public void stop() {
+        angularVelocity = 0;
+
+        Gdx.app.log("COLLISION", "COLLISION OCCURED");
     }
 }
